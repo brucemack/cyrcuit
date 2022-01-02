@@ -77,3 +77,8 @@ class Network:
                             A[node.ordinal, edge.end.ordinal] -= contrib
         return A, b, names
 
+    def get_solution(self):
+        a, b, names = self.get_linear_system()
+        # Solve for the node voltages
+        x = simplify(a.LUsolve(b))
+        return x, names

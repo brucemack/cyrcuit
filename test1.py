@@ -21,10 +21,8 @@ network.add_element("vout", "gnd", "rl")
 # Shut off KCL for this node
 network.set_input("vin")
 
-# Create the matrix representation of the circuit
-A, b, names = network.get_linear_system()
-# Solve for the node voltages
-x = simplify(A.LUsolve(b))
+# Get the solution for the node voltages
+x, names = network.get_solution()
 print(names)
 
 # Setup the complex impedances using RLC values
@@ -76,5 +74,7 @@ result_phase = np.angle(result_complex, True)
 # matplotlib stuff
 plt.plot(input_angles, result_mag_db)
 plt.ylabel('H(f)')
+plt.xlabel('Frequency rad/sec')
 plt.grid(color='grey', linestyle='dashed', linewidth=1)
+plt.title("RFD Low Pass Filter Example - pg. 48")
 plt.show()
