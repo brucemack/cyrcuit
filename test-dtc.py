@@ -35,14 +35,17 @@ print(names)
 # Setup the complex impedances using RLC values
 s, w, l_qu, rs, c1, l2, c3, c4, l5, c6, c7, rl = symbols("s w l_qu rs c1 l2 c3 c4 l5 c6 c7 rl")
 
+# Quality factor (unloaded) for the inductor.  Modeling this 
+# using a series resistor
 l_qu = 200
 
 z_values = [
     (symbols("z1"), 1.0 / (c1 * s)),
-    (symbols("z2"), (l2 * s) + (l2 * s / l_qu)),
+    # Notice that the Q-driven resistor depends on w (not s!)
+    (symbols("z2"), (l2 * s) + (l2 * w / l_qu)),
     (symbols("z3"), 1.0 / (c3 * s)),
     (symbols("z4"), 1.0 / (c4 * s)),
-    (symbols("z5"), (l5 * s) + (l5 * s / l_qu)),
+    (symbols("z5"), (l5 * s) + (l5 * w / l_qu)),
     (symbols("z6"), 1.0 / (c6 * s)),
     (symbols("z7"), 1.0 / (c7 * s))
 ]
