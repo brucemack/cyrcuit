@@ -1,4 +1,4 @@
-# A complete example of creating an RLC network (Low-Pass Filter)
+# A complete example of creating an DTC network (Band-Pass Filter)
 # and simulating it across a range of frequecies.
 #
 # The example is taken from EMRFD on page 3.14, table 3A, frist row.

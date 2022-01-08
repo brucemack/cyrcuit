@@ -52,8 +52,8 @@ class Network:
             names[node.ordinal] = node.name
             # Don't write an KCL expression for the input node
             if node.input == True:
-                A[node.ordinal, node.ordinal] += 1
-                b[node.ordinal] = 1
+                A[node.ordinal, node.ordinal] += 1.0
+                b[node.ordinal] = 1.0
             # Don't write an KCL expression for the ground node
             elif node.ground == True:
                 A[node.ordinal, node.ordinal] += 1
@@ -80,5 +80,5 @@ class Network:
     def get_solution(self):
         a, b, names = self.get_linear_system()
         # Solve for the node voltages
-        x = simplify(a.LUsolve(b))
+        x = a.LUsolve(b)
         return x, names
