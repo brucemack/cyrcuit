@@ -10,7 +10,15 @@ import numpy as np
 from network import Network
 
 print("Starting ...")
+"""
+ Vin-Zs-Va-Zc-Vb-Z3-Vc-Zc-Vd-Z5-Ve-Zc-Vf-Zc-Vout
+         |     |           |           |    |  | 
+         Z1    Z2          Z4          Z6   Z7 Zl
+         |     |           |           |    |  |
+         =     =           =           =    =  =
 
+Zc represents the Crystal
+"""
 # Test stuff
 network = Network()
 
@@ -41,11 +49,11 @@ print(names)
 
 # Setup the complex impedances using RLC values
 s, w = symbols("s w")
-rs, rl, c1, c2, c3, c4, c5, c6, c7, rc, cc, lc = symbols("rs rl c1 c2 c3 c4 c5 c6 c7 rc cc lc")
+rs, rl, c1, c2, c3, c4, c5, c6, c7, rc, cc, lc, cpc = symbols("rs rl c1 c2 c3 c4 c5 c6 c7 rc cc lc cpc")
 
 z_values = [
-    # Crystals are a combination of rc, lc, and cc
-    (symbols("zc"), rc + s*lc + 1.0 / (s*cc)),
+    # Crystals are a parallel combination of (rc, lc, and cc) and (cpc)
+    (symbols("zc"), 1.0 / (1.0 / (rc + s*lc + 1.0 / (s*cc)) + 1.0 / (1.0 / (s*cpc))) ),
     # Caps
     (symbols("z1"), 1.0 / (s*c1)),
     (symbols("z2"), 1.0 / (s*c2)),
@@ -79,6 +87,8 @@ lcr_values = [
     (symbols("rc"), rc),
     (symbols("lc"), 0.098),
     (symbols("cc"), 0.010339e-12),
+    # Parallel capacitance measured
+    (symbols("cpc"), 3e-12),
     # Caps
     (symbols("c1"), 47e-12),
     (symbols("c2"), 154e-12),
