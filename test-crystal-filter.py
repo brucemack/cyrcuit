@@ -53,7 +53,8 @@ rs, rl, c1, c2, c3, c4, c5, c6, c7, rc, cc, lc, cpc = symbols("rs rl c1 c2 c3 c4
 
 z_values = [
     # Crystals are a parallel combination of (rc, lc, and cc) and (cpc)
-    (symbols("zc"), 1.0 / (1.0 / (rc + s*lc + 1.0 / (s*cc)) + 1.0 / (1.0 / (s*cpc))) ),
+    #(symbols("zc"), 1.0 / (1.0 / (rc + s*lc + 1.0 / (s*cc)) + 1.0 / (1.0 / (s*cpc))) ),
+    (symbols("zc"), (rc + s*lc + 1.0 / (s*cc)) ),
     # Caps
     (symbols("z1"), 1.0 / (s*c1)),
     (symbols("z2"), 1.0 / (s*c2)),
@@ -80,8 +81,8 @@ rc = (1.2e8 * f0) / (bw * quc)
 # Plug in the actual values.
 lcr_values = [
     # Source/Load
-    (symbols("rs"), 450),
-    (symbols("rl"), 450),
+    (symbols("rs"), 50 * 9),
+    (symbols("rl"), 50 * 9),
     # Crystal
     # ESR of the crystal (computed from Qu)
     (symbols("rc"), rc),
