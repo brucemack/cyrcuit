@@ -13,8 +13,6 @@ import numpy as np
 from network import Network
 from filterdesign import *
 
-# Twp parallel resonators with capacitor coupler
-
 # Setup parmaters
 fc = 5000000
 bw = 200000
