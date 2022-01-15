@@ -1,6 +1,8 @@
-# Demonstration of the design of N=2 doubly-tuned-circuit.
+# Demonstration of the design of N=4 bandpass filter with 
+# parallel LC tuned circuits.
+
 # Source: Hayward "Designing Narrow-Bandwidth Ladder Filters"
-# page 9.
+# page 11.
 #
 import math
 from sympy import symbols, Matrix, simplify, zeros, parse_expr, I, re, im
@@ -15,14 +17,16 @@ from filterdesign import *
 fc = 5000000
 bw = 200000
 Rs = 50
+N = 4
 # This can be chosen
-L0 = 3e-6
+L0 = 6e-6
 # As measured on the inductor via lab test
 Qu_inductor = 200
 # Butterworth LPF parameters
-g_list = butterworthNormalizedComponents(2)
+g_list = butterworthNormalizedComponents(N)
 # Convert into BPF normalized parameters
 k_list = couplingCoefficientsButterworth(g_list)
+k12, k23, k34 = k_list[0], k_list[1], k_list[0]
 q = endSectionCoefficientButterworth(g_list)
 # Angular center frequency
 wc = 2 * math.pi * fc 
@@ -36,32 +40,38 @@ q0 = Qu_inductor / Qfilter
 print("q0 (looking for >2)", q0)
 # Compute the denormalized end Q
 Qe = 1.0 / ((1.0 / (q * Qfilter)) - (1.0 / Qu_inductor))
-# Compute the denormalized coupling capacitor
-C12 = C0 * k_list[0] / Qfilter
+# Compute the denormalized coupling capacitors
+C12 = C0 * k12 / Qfilter
+C23 = C0 * k23 / Qfilter
+C34 = C0 * k34 / Qfilter
 # Figure out the end resistance needed to properly load 
 # the end resonator to acheive the desired end Q.  This 
-# is by definition of "Q" for an inductor, and this 
-# resistor is contained in the inductor as a conseqence 
-# of the Qu.
+# is by definition of "Q" for an inductor.
 Rpe = Qe * wc * L0
 # Figure out what *series* end capacitor is needed to 
 # acheive the necessary end loading, given the Rs that 
 # we already have.
 Ce = 1 / (wc * math.sqrt(Rpe * Rs - Rs ** 2))
 # Figure out what the equivalent parallel (shunt) capacitance
-# is formed by the Rpe and the series Ce.  This will be needed
+# is formed by the Rs and the series Ce.  This will be needed
 # later during the re-tuning process.
-Ce_parallel = Ce / ((Rpe * Ce) ** 2 + 1)
+Ce_parallel = Ce / ((Rs * wc * Ce) ** 2 + 1)
 # Re-tuning: Now we need to adjust the resonator capacitor in order 
 # maintain the same fc.  We are "backing out" the capacitance
 # that was introduced in the loop 
-Cretuned = C0 - Ce_parallel - C12
-# Compute the insertion loss of the filter
-il = 20 * math.log10(q0 / (q0 - q))
+Cretuned_1 = C0 - Ce_parallel - C12
+Cretuned_2 = C0 - C12 - C23
+Cretuned_3 = C0 - C23 - C34
+Cretuned_4 = C0 - C34 - Ce_parallel
+
 # Display
-print("Resonator inductor    ", L0)
-print("Resonator resistor    ", Rpe)
-print("Resonator capacitor   ", Cretuned)
-print("End capacitor Ce      ", Ce)
-print("Couping capacitor C12 ", C12)
-print("Insertion loss (db)    ", il)
+print("Resonator inductor      ", L0)
+print("Resonator resistor      ", Rpe)
+print("Resonator capacitor 1   ", Cretuned_1)
+print("Resonator capacitor 2   ", Cretuned_2)
+print("Resonator capacitor 3   ", Cretuned_3)
+print("Resonator capacitor 4   ", Cretuned_4)
+print("End capacitor Ce        ", Ce)
+print("Couping capacitor C12   ", C12)
+print("Couping capacitor C23   ", C23)
+print("Couping capacitor C34   ", C34)
