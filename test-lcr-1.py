@@ -14,7 +14,7 @@ from network import Network
 network = Network()
 
 # A very simple circuit (From Radio Frequency Design (Hayward) pg. 48)
-network.add_element("vin", "va", "rs")
+network.add_element("vin", "va", "rs + other")
 network.add_element("va", "vout", "z1")
 network.add_element("vout", "gnd", "z2")
 network.add_element("vout", "gnd", "rl")
@@ -32,7 +32,8 @@ z_values = [
     (symbols("rs"), r),
     (symbols("z1"), l * s),
     (symbols("z2"), 1.0 / (c * s)),
-    (symbols("rl"), r)
+    (symbols("rl"), r),
+    (symbols("other"), 0)
 ]
 x = x.subs(z_values)
 
@@ -52,7 +53,7 @@ x = simplify(x.subs(s, w * I))
 H = x[3]
 
 # Create the sweep of frequencies in rad/sec
-input_angles = np.linspace(0, 5, 100)
+input_angles = np.linspace(0.01, 5, 100)
 h, w = symbols("h w")
 
 # Used to evaluate the transfer function at a specific frequency

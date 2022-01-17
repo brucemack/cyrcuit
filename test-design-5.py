@@ -61,7 +61,7 @@ Cnet_1 = 1 / (1 / Ce_series + 1 / Cm + 1 / C12)
 # Compute the resonant freqeuncy in the end mesh
 f1 = 1 / (2 * math.pi * math.sqrt(Lm * Cnet_1))
 
-# Calculate the total capacitance in the second mesh
+# Calculate the total capacitance in the second mesh                                                                                                  
 Cnet_2 = 1 / (1 / Cm + 1 / C12 + 1 / C23)
 # Compute the resonant freqeuncy in the second mesh
 f2 = 1 / (2 * math.pi * math.sqrt(Lm * Cnet_2))
@@ -81,6 +81,11 @@ Ch = 1 / (wh**2 * Lm)
 Cadjust_2 = 1 / (1 / Ch - 1 / Cm - 1 / C12 - 1 / C23)
 # Figure out what extra needs to be added to mesh 3 to re-tune
 Cadjust_3 = 1 / (1 / Ch - 1 / Cm - 1 / C23 - 1 / C34)
+
+# Another way to get the adjustment directly from the 
+# existing mesh capacitiances:
+Cadjust = (Cnet_1 * Cnet_2) / (Cnet_2 - Cnet_1)
+print("Cadjust", Cadjust)
 
 # Re-tuning: Now we need to adjust the resonator capacitor in order 
 # maintain the same fc.  We are "backing out" the capacitance

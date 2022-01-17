@@ -11,10 +11,10 @@ class Node:
 
 class Edge:
     """ The connection between two notes in the circuit """
-    def __init__(self, start: Node, end: Node, imp: str):
-        self.start = start
-        self.end = end
-        self.imp = imp
+    def __init__(self, start_node: Node, end_node: Node, imp_expr: str):
+        self.start = start_node
+        self.end = end_node
+        self.imp = imp_expr
 
 class Network:
     def __init__(self):
@@ -31,10 +31,10 @@ class Network:
             n.ordinal = c
         return self.nodes[name]
 
-    def add_element(self, node0: str, node1: str, imp: str):
-        n0 = self.get_or_create_node(node0)
-        n1 = self.get_or_create_node(node1)
-        self.edges.append(Edge(n0, n1, imp))
+    def add_element(self, node0_name: str, node1_name: str, imp_expr: str):
+        n0 = self.get_or_create_node(node0_name)
+        n1 = self.get_or_create_node(node1_name)
+        self.edges.append(Edge(n0, n1, imp_expr))
 
     def set_input(self, name: str):
         self.nodes[name].input = True
@@ -66,7 +66,7 @@ class Network:
                 # touch add/subtract current.
                 for edge in self.edges:
                     if edge.start == node or edge.end == node:
-                        contrib = 1.0 / symbols(edge.imp)
+                        contrib = 1.0 / parse_expr(edge.imp, evaluate=False)
                         # The direction of contribution depends on whether this 
                         # is an out-flowing branch or an in-flowing one.
                         if edge.end == node:

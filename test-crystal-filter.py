@@ -75,6 +75,9 @@ quc = 240000
 # Center freq and bandwidth
 f0 = 5
 bw = 400
+# Measured
+Lm = 0.098
+Cm = 0.010339e-12
 # The ESR of the filter
 rc = (1.2e8 * f0) / (bw * quc)
 
@@ -86,8 +89,8 @@ lcr_values = [
     # Crystal
     # ESR of the crystal (computed from Qu)
     (symbols("rc"), rc),
-    (symbols("lc"), 0.098),
-    (symbols("cc"), 0.010339e-12),
+    (symbols("lc"), Lm),
+    (symbols("cc"), Cm),
     # Parallel capacitance measured
     (symbols("cpc"), 3e-12),
     # Caps
